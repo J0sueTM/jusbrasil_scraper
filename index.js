@@ -16,13 +16,14 @@ async function run() {
 
   let companies = [
     'nike do brasil comércio e participações ltda',
-    'adidas do brasil ltda',
-    'puma do brasil ltda',
-    'reebok produtos esportivos ltda',
-    'asics brasil, distribuição e comércio de artigos esportivos ltda',
-    'under armour brasil comércio e distribuição de artigos esportivos ltda'
+    // 'adidas do brasil ltda',
+    // 'puma do brasil ltda',
+    // 'reebok produtos esportivos ltda',
+    // 'asics brasil, distribuição e comércio de artigos esportivos ltda',
+    // 'under armour brasil comércio e distribuição de artigos esportivos ltda'
   ]
 
+  var procs_urls = new Map()
   for await (const company of companies) {
     await page.goto('https://www.jusbrasil.com.br/consulta-processual/')
 
@@ -36,10 +37,13 @@ async function run() {
     while (!finished) {
       await delay(1000)
 
-      let currentDocuments = await page.$$eval('.EntitySnippet-item', elms => {
-        return elms.map(elm => elm.innerHTML)
+      let pageDocuments = await page.$$eval('.EntitySnippet-item', elms => {
+        return elms.map(elm => {
+          return elm.querySelector('.EntitySnippet-header > .EntitySnippet-header-info > .EntitySnippet-anchor-wrapper > a')
+            .getAttribute('href')
+        })
       })
-      documents = documents.concat(currentDocuments)
+      documents = documents.concat(pageDocuments)
 
       const isAtEnd = await page.$$eval(disabledNextButtonSelector, elms => elms)
       if (isAtEnd.length >= 1) {
@@ -52,9 +56,10 @@ async function run() {
       await page.click(activatedNextButtonSelector)
     }
 
-    const documentsContent = documents.join('\n\n')
-    console.log(documentsContent)
+    procs_urls.set(company, documents)
   }
+
+  console.log(procs_urls)
 
   await browser.close()
 }
