@@ -1,15 +1,21 @@
 import Scraper from './scraper'
-import { DispProcUrlsSpider } from './spiders'
+import {
+  DispProcUrlsSpider,
+  ProcUrlsSpider
+} from './spiders'
+import Spider from './spiders/spider'
 
 async function main() {
   const scraper = new Scraper('https://www.jusbrasil.com.br')
-  await scraper.openBrowser()
-
-  const dispProcUrlsSpider = new DispProcUrlsSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`)
   scraper.createCache('cache')
-  scraper.addSpider(dispProcUrlsSpider, 'urls de processos dispersos')
 
-  scraper.scrape()
+  const spiders: Map<string, Spider> = new Map()
+  spiders.set('urls de processos dispersos', new DispProcUrlsSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`))
+  spiders.set('urls de processos', new ProcUrlsSpider())
+  scraper.setSpiders(spiders)
+
+  await scraper.openBrowser()
+  await scraper.scrape()
 }
 
 main()

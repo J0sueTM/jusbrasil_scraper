@@ -1,23 +1,14 @@
-import { Browser, Page } from 'puppeteer'
 import * as fs from 'fs'
 
 class Spider {
   protected baseUrl: string
   protected urls: string[] = []
 
-  protected browser: Browser
-  protected page: Page
-
   protected name: string
   protected cacheFilePath: string
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
-  }
-
-  public setPptr(browser: Browser, page: Page) {
-    this.browser = browser
-    this.page = page
   }
 
   protected async crawl() {

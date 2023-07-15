@@ -1,22 +1,13 @@
 import * as fs from 'fs'
 import { delay } from '../scraper'
+import { appState, companies } from '../state'
 import Spider from './spider'
 
 class DispProcUrlsSpider extends Spider {
-  private procUrls : Map<string, string[]> = new Map()
-  private companies: string[] = [
-    'nike do brasil comércio e participações ltda',
-    'adidas do brasil ltda',
-    'puma do brasil ltda',
-    'reebok produtos esportivos ltda',
-    'asics brasil, distribuição e comércio de artigos esportivos ltda',
-    'under armour brasil comércio e distribuição de artigos esportivos ltda'
-  ]
-
   constructor(baseUrl: string) {
     super(baseUrl)
 
-    for (const company of this.companies) {
+    for (const company of companies) {
       this.urls.push(`${this.baseUrl}${company.replaceAll(' ', '+')}`)
     }
   }
@@ -26,16 +17,16 @@ class DispProcUrlsSpider extends Spider {
     const disNextBtnSlc: string = 'li.pagination-item.disabled > a[aria-label="Próximo"]'
     const actNextBtnSlc: string = 'li.pagination-item > a[aria-label="Próximo"]'
     for await (const [idx, url] of this.urls.entries()) {
-      await this.page.goto(url)
+      await appState.page.goto(url)
 
-      let curCompany: string = this.companies[idx]
+      let curCompany: string = companies[idx]
       var curProcUrls: string[] = []
 
       var finished: boolean = false
       while (!finished) {
         await delay(1000)
 
-        let curPageProcUrls = await this.page.$$eval('.EntitySnippet-item', elms => {
+        let curPageProcUrls = await appState.page.$$eval('.EntitySnippet-item', elms => {
           return elms.map(elm => {
             const selector: string = '.EntitySnippet-header > .EntitySnippet-header-info > .EntitySnippet-anchor-wrapper > a'
  
@@ -44,34 +35,34 @@ class DispProcUrlsSpider extends Spider {
         })
         curProcUrls = curProcUrls.concat(curPageProcUrls)
 
-        let disNextButton = await this.page.$$eval(disNextBtnSlc, elms => elms)
-        let pagination = await this.page.$$eval(paginationSlc, elms => elms)
+        let disNextButton = await appState.page.$$eval(disNextBtnSlc, elms => elms)
+        let pagination = await appState.page.$$eval(paginationSlc, elms => elms)
         if (disNextButton.length >= 1 || pagination.length <= 0) {
           finished = true
 
           break
         }
 
-        await this.page.waitForSelector(actNextBtnSlc, { visible: true })
-        await this.page.click(actNextBtnSlc)
+        await appState.page.waitForSelector(actNextBtnSlc, { visible: true })
+        await appState.page.click(actNextBtnSlc)
       }
 
-      this.procUrls.set(curCompany, curProcUrls)
+      appState.dispProcUrls.set(curCompany, curProcUrls)
     }
   }
 
   protected save() {
     // formatting would be nicer with:
-    // const rawData = JSON.stringify(Object.fromEntries(this.procUrls))
+    // const rawData = JSON.stringify(Object.fromEntries(this.dispProcUrls))
     // but I couldn't reverse it.
 
-    const rawData = JSON.stringify(Array.from(this.procUrls.entries()))
+    const rawData = JSON.stringify(Array.from(appState.dispProcUrls.entries()))
     fs.writeFileSync(this.cacheFilePath, rawData)
   }
 
   protected load() {
     const rawData = fs.readFileSync(this.cacheFilePath, 'utf8')
-    this.procUrls = new Map(JSON.parse(rawData))
+    appState.dispProcUrls = new Map(JSON.parse(rawData))
   }
 }
 
