@@ -1,0 +1,12 @@
+{
+  "name": "jusbrasil_scraper",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "j0suetm",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^20.8.2",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}
