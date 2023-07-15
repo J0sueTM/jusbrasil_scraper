@@ -4,9 +4,19 @@
   "main": "index.js",
   "author": "j0suetm",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "yarn build && yarn start"
+  },
   "dependencies": {
+    "@types/node": "^20.4.2",
     "puppeteer": "^20.8.2",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "devDependencies": {
+    "puppeteer-tsd": "^0.0.2",
+    "typescript": "^5.1.6"
   }
 }

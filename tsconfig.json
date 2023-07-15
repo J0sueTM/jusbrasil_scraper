@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "declaration": true,
+    "target": "es2021",
+    "lib": ["es2021", "dom"],
+    "outDir": "./dist",
+    "noUnusedLocals": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": false,
+    "pretty": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowUnreachableCode": false,
+    "allowSyntheticDefaultImports": true,
+  },
+  "include": [
+    "src",
+    "node_modules/puppeteer-tsd/src/index.d.ts"
+  ]
+}
