@@ -1,4 +1,4 @@
-import DispProcUrlsSpider from './disp-proc-urls'
+import ProcUrlsPagesSpider from './proc-pages'
 import ProcUrlsSpider from './proc-urls'
 
-export { DispProcUrlsSpider, ProcUrlsSpider}
+export { ProcUrlsPagesSpider, ProcUrlsSpider}

@@ -3,12 +3,12 @@ import { Browser, Page } from "puppeteer"
 interface State {
   browser: Browser
   page: Page
-  dispProcUrls: Map<string, string[]>
+  procPages: Map<string, string[]>
   procUrls: Map<string, string[]>
 }
 
 const appState: State = {
-  dispProcUrls: new Map(),
+  procPages: new Map(),
   procUrls: new Map()
 } as State
 

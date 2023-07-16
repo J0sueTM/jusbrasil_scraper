@@ -1,6 +1,6 @@
 import Scraper from './scraper'
 import {
-  DispProcUrlsSpider,
+  ProcUrlsPagesSpider,
   ProcUrlsSpider
 } from './spiders'
 import Spider from './spiders/spider'
@@ -10,7 +10,7 @@ async function main() {
   scraper.createCache('cache')
 
   const spiders: Map<string, Spider> = new Map()
-  spiders.set('urls de processos dispersos', new DispProcUrlsSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`))
+  spiders.set('urls de processos dispersos', new ProcUrlsPagesSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`))
   spiders.set('urls de processos', new ProcUrlsSpider())
   scraper.setSpiders(spiders)
 

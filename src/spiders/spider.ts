@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import Middleware from '../middlewares/middleware'
 
 class Spider {
   protected baseUrl: string
@@ -7,20 +8,22 @@ class Spider {
   protected name: string
   protected cacheFilePath: string
 
+  protected middlewares: Middleware[] = []
+
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl
   }
 
   protected async crawl() {
-    throw new Error('FIXME: crawl não foi implementada')
+    throw new Error('FIXME: crawl() não foi implementada')
   }
 
   protected save() {
-    throw new Error('FIXME: save não foi implementada')
+    throw new Error('FIXME: save() não foi implementada')
   }
 
   protected load() {
-    throw new Error('FIXME: load não foi implementada')
+    throw new Error('FIXME: load() não foi implementada')
   }
 
   protected shouldLoad(): boolean {
@@ -48,6 +51,14 @@ class Spider {
       }
     } catch (err: any) {
       console.error(err)
+    }
+
+    if (this.middlewares.length >= 1) {
+      console.info('Executando middlewares...')
+      for (const middleware of this.middlewares) { middleware.run() }
+
+      console.info('Salvando cachê dos middlewares...')
+      this.save()
     }
 
     console.info(`Spider >> ${this.name} << finalizada\n`)
