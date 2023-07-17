@@ -1,3 +1,3 @@
-import ProcPagesCleanerMiddleware from "./proc-pages-cleaner"
+import ProcPagesCleanerMiddleware from "./proc-pages-cleaner";
 
-export { ProcPagesCleanerMiddleware }
+export { ProcPagesCleanerMiddleware };

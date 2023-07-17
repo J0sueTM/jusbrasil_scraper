@@ -1,21 +1,21 @@
-import Scraper from './scraper'
-import {
-  ProcUrlsPagesSpider,
-  ProcUrlsSpider
-} from './spiders'
-import Spider from './spiders/spider'
+import Scraper from "./scraper";
+import { ProcUrlsPagesSpider, ProcsSpider } from "./spiders";
+import Spider from "./spiders/spider";
 
 async function main() {
-  const scraper = new Scraper('https://www.jusbrasil.com.br')
-  scraper.createCache('cache')
+  const scraper = new Scraper("https://www.jusbrasil.com.br");
+  scraper.createCache("cache");
 
-  const spiders: Map<string, Spider> = new Map()
-  spiders.set('urls de processos dispersos', new ProcUrlsPagesSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`))
-  spiders.set('urls de processos', new ProcUrlsSpider())
-  scraper.setSpiders(spiders)
+  const spiders: Map<string, Spider> = new Map();
+  spiders.set(
+    "urls de paginas de processos",
+    new ProcUrlsPagesSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`)
+  );
+  spiders.set("processos", new ProcsSpider());
+  scraper.setSpiders(spiders);
 
-  await scraper.openBrowser()
-  await scraper.scrape()
+  await scraper.openBrowser();
+  await scraper.scrape();
 }
 
-main()
+main();

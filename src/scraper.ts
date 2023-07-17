@@ -1,50 +1,52 @@
-import puppeteer from 'puppeteer-extra'
-import { executablePath } from 'puppeteer'
+import puppeteer from "puppeteer-extra";
+import { executablePath } from "puppeteer";
 
-import Spider from './spiders/spider'
-import * as fs from 'fs'
-import { appState } from './state'
+import Spider from "./spiders/spider";
+import * as fs from "fs";
+import { appState } from "./state";
 
-const pptr = puppeteer.use(require('puppeteer-extra-plugin-stealth')())
+const pptr = puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 
 // helper func
-const delay = ms => new Promise(res => setTimeout(res, ms));
+const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 class Scraper {
-  public baseUrl: string
-  private spiders: Map<string, Spider> = new Map()
+  public baseUrl: string;
+  private spiders: Map<string, Spider> = new Map();
 
   constructor(baseUrl: string) {
-    this.baseUrl = baseUrl
+    this.baseUrl = baseUrl;
   }
 
   public createCache(dirName: string) {
     if (!fs.existsSync(dirName)) {
-      fs.mkdirSync(dirName, { recursive: false })
+      fs.mkdirSync(dirName, { recursive: false });
     }
   }
 
   public async openBrowser() {
     appState.browser = await pptr.launch({
       headless: false,
-      executablePath: executablePath() || ''
-    })
+      executablePath: executablePath() || "",
+    });
 
-    appState.page = await appState.browser.newPage()
+    appState.page = await appState.browser.newPage();
   }
 
-  public setSpiders(spiders: Map<string, Spider>) { this.spiders = spiders }
+  public setSpiders(spiders: Map<string, Spider>) {
+    this.spiders = spiders;
+  }
 
   public async scrape() {
-    console.info('Extração inicializada\n')
+    console.info("Extração inicializada\n");
 
     for await (const [name, spider] of this.spiders.entries()) {
-      await spider.run(name)
+      await spider.run(name);
     }
 
-    console.info('Extração finalizada')
+    console.info("Extração finalizada");
   }
 }
 
-export default Scraper
-export { delay }
+export default Scraper;
+export { delay };

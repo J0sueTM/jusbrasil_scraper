@@ -1,7 +1,7 @@
 class Middleware {
   public run() {
-    throw new Error('FIXME: execute() não foi implementada')
+    throw new Error("FIXME: execute() não foi implementada");
   }
 }
 
-export default Middleware
+export default Middleware;
