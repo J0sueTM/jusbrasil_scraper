@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { Proc } from "../dto";
+import { ProcParserMiddleware } from "../middlewares";
 import { appState } from "../state";
 import Spider from "./spider";
 
@@ -8,6 +9,8 @@ const cliProgress = require("cli-progress");
 class ProcsSpider extends Spider {
   constructor() {
     super("");
+
+    this.middlewares.push(new ProcParserMiddleware())
   }
 
   protected async crawl() {
@@ -44,7 +47,12 @@ class ProcsSpider extends Spider {
           ".navbar-link.active > h2.navinline > span";
         let totalPageProcCount: number = await appState.page.$eval(
           procCountSlc,
-          (elm) => +elm.textContent
+          (elm) => {
+            let rawNum: string = elm.textContent?.replace(/\D/g, '');
+
+            const defaultThreshold: number = 1000;
+            return Math.min(+rawNum, defaultThreshold);
+          }
         );
         const pageBar = progressBar.create(totalPageProcCount, 0);
 
@@ -128,6 +136,8 @@ class ProcsSpider extends Spider {
           pageBar.update(curPageProcCount, { pagename: `Página ${idx + 1}` });
         }
 
+        this.savePage(company, idx + 1, curPageProcs);
+
         procs = procs.concat(curPageProcs);
 
         progressBar.remove(pageBar);
@@ -139,7 +149,25 @@ class ProcsSpider extends Spider {
       console.info(`Total extraído: ${procs.length}\n`);
 
       appState.procs.set(company, procs);
+
+      this.saveCompany(company, procs);
     }
+  }
+
+  private savePage(company: string, idx: number, data: Proc[]) {
+    const rawData = JSON.stringify(data);
+    const destFilePath: string[] = this.cacheFilePath.split("/");
+    const filePath: string =
+      `${destFilePath[0]}/${company.replaceAll(" ", "-")}/processos-${idx}.json`;
+    fs.writeFileSync(filePath, rawData);
+  }
+
+  protected saveCompany(company: string, data: any[]) {
+    const rawData = JSON.stringify(data);
+    const destFilePath: string[] = this.cacheFilePath.split("/");
+    const filePath: string =
+      `${destFilePath[0]}/${company.replaceAll(" ", "-")}/processos.json`;
+    fs.writeFileSync(filePath, rawData);
   }
 
   protected save() {

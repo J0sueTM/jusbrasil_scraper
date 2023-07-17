@@ -19,8 +19,9 @@ class ProcPagesCleanerMiddleware extends Middleware {
           url.includes(blockedStr)
         );
       });
+      let uniqueNewCompProcUrls = [...new Set(newCompProcUrls)];
 
-      appState.procPages.set(company, newCompProcUrls);
+      appState.procPages.set(company, uniqueNewCompProcUrls);
     }
   }
 }

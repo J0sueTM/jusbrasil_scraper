@@ -3,7 +3,7 @@ import { executablePath } from "puppeteer";
 
 import Spider from "./spiders/spider";
 import * as fs from "fs";
-import { appState } from "./state";
+import { appState, companies } from "./state";
 
 const pptr = puppeteer.use(require("puppeteer-extra-plugin-stealth")());
 
@@ -21,6 +21,12 @@ class Scraper {
   public createCache(dirName: string) {
     if (!fs.existsSync(dirName)) {
       fs.mkdirSync(dirName, { recursive: false });
+    }
+
+    for (const company of companies) {
+      if (!fs.existsSync(`${dirName}/${company}`)) {
+        fs.mkdirSync(`${dirName}/${company.replaceAll(" ", "-")}`, { recursive: true });
+      }
     }
   }
 

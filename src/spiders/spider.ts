@@ -18,6 +18,10 @@ class Spider {
     throw new Error("FIXME: crawl() não foi implementada");
   }
 
+  protected saveCompany(company: string, data: any[]) {
+    throw new Error("FIXME: saveCompany() não foi implementada");
+  }
+
   protected save() {
     throw new Error("FIXME: save() não foi implementada");
   }

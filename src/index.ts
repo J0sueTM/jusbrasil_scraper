@@ -1,5 +1,5 @@
 import Scraper from "./scraper";
-import { ProcUrlsPagesSpider, ProcsSpider } from "./spiders";
+import { ProcPagesSpider, ProcsSpider } from "./spiders";
 import Spider from "./spiders/spider";
 
 async function main() {
@@ -9,7 +9,7 @@ async function main() {
   const spiders: Map<string, Spider> = new Map();
   spiders.set(
     "urls de paginas de processos",
-    new ProcUrlsPagesSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`)
+    new ProcPagesSpider(`${scraper.baseUrl}/consulta-processual/busca?q=`)
   );
   spiders.set("processos", new ProcsSpider());
   scraper.setSpiders(spiders);

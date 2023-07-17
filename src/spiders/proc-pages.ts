@@ -29,7 +29,7 @@ class ProcPagesSpider extends Spider {
 
       var finished: boolean = false;
       while (!finished) {
-        await delay(1000);
+        await delay(500);
 
         let pageUrls = await appState.page.$$eval(
           ".EntitySnippet-item",
@@ -63,7 +63,16 @@ class ProcPagesSpider extends Spider {
       }
 
       appState.procPages.set(curCompany, curPages);
+      this.middlewares[0].run();
+      this.saveCompany(curCompany, curPages);
     }
+  }
+
+  protected saveCompany(company: string, data: any[]) {
+    const rawData = JSON.stringify(data);
+    const destFilePath: string[] = this.cacheFilePath.split("/");
+    const filePath: string = `${destFilePath[0]}/${company.replaceAll(" ", "-")}/${destFilePath[1]}`;
+    fs.writeFileSync(filePath, rawData);
   }
 
   protected save() {
