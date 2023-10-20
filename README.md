@@ -1,8 +1,8 @@
 # JusBrasil Scrapper
 
-This repository is an interview challenge by the judicial company LISS.
+This repository is an interview challenge from the judicial company LISS.
 
-For legal advice, the data extracted isn't being sold, neither stored or used financially. This project is purally for educational usage.
+Legal notice: the data extracted isn't being sold, neither stored or used financially. This project is purely for educational usage.
 
 ## How to run
 
